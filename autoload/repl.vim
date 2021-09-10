@@ -258,15 +258,8 @@ endfunction
 
 function! repl#REPLUnhide()
     if repl#REPLIsHidden()
-        if g:repl_position == 0
-            exe 'bo unhide'
-        elseif g:repl_position == 1
-            exe 'to unhide'
-        elseif g:repl_position == 2
-            exe 'vert unhide'
-        else
-            exe 'vert rightb unhide'
-        endif
+		exe "vert sb" . bufnr(repl#GetConsoleName())
+		exe "wincmd w"
     endif
 endfunction
 

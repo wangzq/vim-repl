@@ -415,6 +415,15 @@ function! repl#REPLIsHidden()
     endif
 endfunction
 
+function! repl#REPLShow()
+    if bufnr(repl#GetConsoleName()) == -1
+		call repl#REPLOpen()
+		exe 'wincmd w'
+    elseif repl#REPLIsVisible() == 0
+		call repl#REPLUnhide()
+    endif
+endfunction
+
 function! repl#REPLIsVisible()
 	if bufwinnr(bufnr(repl#GetConsoleName())) != -1
 		return 1
@@ -474,8 +483,8 @@ function! repl#REPLToggle(...)
 endfunction
 
 function! repl#SendCurrentLine()
-    if g:repl_unhide_when_send_lines && repl#REPLIsHidden()
-        call repl#REPLUnhide()
+    if g:repl_unhide_when_send_lines
+        call repl#REPLShow()
     endif
 	if bufexists(repl#GetConsoleName())
         let l:cursor_pos = getpos('.')
@@ -559,8 +568,8 @@ function! repl#SendCurrentLine()
 endfunction
 
 function! repl#SendRHSofCurrentLine()
-    if g:repl_unhide_when_send_lines && repl#REPLIsHidden()
-        call repl#REPLUnhide()
+    if g:repl_unhide_when_send_lines
+        call repl#REPLShow()
     endif
 	if bufexists(repl#GetConsoleName())
         let l:cursor_pos = getpos('.')
@@ -794,8 +803,8 @@ function! repl#WaitFor(symbols)
 endfunction
 
 function! repl#SendChunkLines() range abort
-    if g:repl_unhide_when_send_lines && repl#REPLIsHidden()
-        call repl#REPLUnhide()
+    if g:repl_unhide_when_send_lines
+        call repl#REPLShow()
     endif
     if a:firstline == a:lastline
         let [l:line_start, l:column_start] = getpos("'<")[1:2]
@@ -876,8 +885,8 @@ function! repl#SendAll() abort
 endfunction
 
 function! repl#SendSession() abort
-    if g:repl_unhide_when_send_lines && repl#REPLIsHidden()
-        call repl#REPLUnhide()
+    if g:repl_unhide_when_send_lines 
+        call repl#REPLShow()
     endif
     call cursor(0, col("$"))
     let g:repl_code_block_begin = get(g:repl_code_block_fences, &ft, '# %%')

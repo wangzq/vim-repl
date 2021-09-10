@@ -480,7 +480,8 @@ function! repl#SendCurrentLine()
 	if bufexists(repl#GetConsoleName())
         let l:cursor_pos = getpos('.')
         if repl#REPLWin32Return()
-            let l:code_tobe_sent = getline('.') . "\r\n"
+			" Not sure why, but using "\r\n" in PowerShell will cause an extra line continuation mark entered, using "\r" worked
+            let l:code_tobe_sent = getline('.') . "\r"
         else
             let l:code_tobe_sent = getline('.') . "\n"
         endif
